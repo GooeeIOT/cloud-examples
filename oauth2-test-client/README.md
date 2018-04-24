@@ -27,4 +27,4 @@ Usage
 License
 -------
 
-This example is distributed under the `Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>`__, see the parent directory's LICENSE for more information.
+This example is distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), see the parent directory's LICENSE for more information.
