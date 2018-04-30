@@ -18,10 +18,12 @@ Usage
 3. Run the client:
 `docker run --name flask -p 8080:80 -v $(pwd):/app --env-file env.list -d jazzdd/alpine-flask:python3`
 
-4. Visit the client page in your browser at:
+4. (Optional) If you need this as a public resource, try <ngrok.com>. You will need to modify `env.list` do use the Ngrok forwarding URL.
+
+5. Visit the client page in your browser at:
 `http://localhost:8080`
 
-5. Stop the client:
+6. Stop the client:
 `docker rm -f flask`
 
 License

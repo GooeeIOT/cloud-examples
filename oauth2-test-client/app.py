@@ -12,7 +12,7 @@ VERIFY_ENDPOINT = os.getenv('VERIFY_ENDPOINT')
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 SCOPES = os.getenv('SCOPES')
-REDIRECT_URI = "http://localhost:8080/api_callback"
+REDIRECT_URI = os.getenv('REDIRECT_URI')
 STATE = uuid4().hex
 
 assert all((
@@ -21,6 +21,7 @@ assert all((
     VERIFY_ENDPOINT,
     CLIENT_ID,
     CLIENT_SECRET,
+    REDIRECT_URI,
     SCOPES,
 )), "Please set Environment Variables"
 
@@ -117,4 +118,4 @@ def cloud_api_callback():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True, host='0.0.0.0', port=80)
