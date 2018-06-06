@@ -50,13 +50,26 @@ def make_authorization_url():
     return url
 
 
-def get_token_response(code):
-    client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
-    data = {
+def get_token_response(code: str) -> dict:
+    return token_request(data={
         "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": REDIRECT_URI,
-    }
+    })
+
+
+def get_refreshed_token(refresh_token : str) -> dict:
+    return token_request(data={
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token,
+        # Optional reduction of scope
+        "scope": "building:read",
+    })
+
+
+def token_request(data: dict) -> dict:
+    """Helper function that makes requests to the TOKEN_ENDPOINT"""
+    client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
     if USE_FORM_PAYLOADS:
         response = requests.post(
             url=TOKEN_ENDPOINT,
@@ -72,30 +85,7 @@ def get_token_response(code):
     return response.json()
 
 
-def get_refreshed_token(refresh_token):
-    client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
-    data = {
-        "grant_type": "refresh_token",
-        "refresh_token": refresh_token,
-        # Optional reduction of scope
-        "scope": "building:read",
-    }
-    if USE_FORM_PAYLOADS:
-        response = requests.post(
-            url=TOKEN_ENDPOINT,
-            auth=client_auth,
-            data=data,
-        )
-    else:
-        url = f'{TOKEN_ENDPOINT}?{urllib.parse.urlencode(data)}'
-        response = requests.post(
-            url,
-            auth=client_auth,
-        )
-    return response.json()['access_token']
-
-
-def get_protected_data(token):
+def get_protected_data(token: str) -> str:
     headers = {'Authorization': f'Bearer {token}'}
     response = requests.get(
         VERIFY_ENDPOINT,
@@ -121,9 +111,13 @@ def cloud_api_callback():
     protected_data = get_protected_data(
         token_response['access_token'],
     )
-    new_token = get_refreshed_token(token_response['refresh_token'])
+    new_token = get_refreshed_token(
+        token_response['refresh_token'],
+    )['access_token']
     protected_data_with_new_token = get_protected_data(new_token)
-    new_token2 = get_refreshed_token(token_response['refresh_token'])
+    new_token2 = get_refreshed_token(
+        token_response['refresh_token'],
+    )['access_token']
     protected_data_with_new_token2 = get_protected_data(new_token2)
 
     return dedent(f"""\
