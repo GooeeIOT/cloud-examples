@@ -136,6 +136,7 @@ def cloud_api_callback():
     <p>Refreshed Token: {new_token}</p>
 
     <p>Protected Data using new_token: {protected_data_with_new_token}</p>
+    <p>Refreshed Token2: {new_token2}</p>
     <p>Protected Data using new_token2 from the same refresh_token: {protected_data_with_new_token2}</p>
     """)
 
